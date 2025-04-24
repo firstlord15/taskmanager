@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование задачи</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-4">
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/dashboard">Task Manager</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/tasks">Задачи</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/categories">Категории</a>
+                </li>
+            </ul>
+            <form th:action="@{/logout}" method="post" class="d-flex">
+                <button type="submit" class="btn btn-outline-danger">Выйти</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<h1 class="mb-4">Редактирование задачи</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form th:action="@{/tasks/{id}/edit(id=${task.id})}" method="post" th:object="${task}">
+            <div class="mb-3">
+                <label for="title" class="form-label">Название задачи</label>
+                <input type="text" class="form-control" id="title" th:field="*{title}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Описание</label>
+                <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="status" class="form-label">Статус</label>
+                <select class="form-select" id="status" th:field="*{status}">
+                    <option th:each="statusOption : ${statuses}"
+                            th:value="${statusOption}"
+                            th:text="${statusOption}"
+                            th:selected="${statusOption == task.status}">Статус</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="priority" class="form-label">Приоритет</label>
+                <select class="form-select" id="priority" th:field="*{priority}">
+                    <option th:each="priorityOption : ${priorities}"
+                            th:value="${priorityOption}"
+                            th:text="${priorityOption}"
+                            th:selected="${priorityOption == task.priority}">Приоритет</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="categoryId" class="form-label">Категория</label>
+                <select class="form-select" id="categoryId" name="categoryId">
+                    <option value="">-- Без категории --</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}"
+                            th:selected="${task.category != null && category.id == task.category.id}">Категория</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="dueDate" class="form-label">Срок выполнения</label>
+                <input type="date" class="form-control" id="dueDate" th:field="*{dueDate}">
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a th:href="@{/tasks/{id}(id=${task.id})}" class="btn btn-secondary me-md-2">Отмена</a>
+                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
